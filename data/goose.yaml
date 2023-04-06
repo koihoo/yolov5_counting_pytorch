@@ -9,3 +9,4 @@ test:  # test images (optional)
 # Classes
 nc: 1  # number of classes
 names: ['goose']  # class names
+###
