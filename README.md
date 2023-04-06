@@ -114,3 +114,6 @@ python detect.py --weights runs/train/exp/weights/best.pt --source xxx.mp4 --vie
 cv2.putText(im0,f"{names[int(c)]}{'s' * (n > 1)}: {n}", (5,50), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 2)
 ```
 
+---
+# 使用框架
+* https://github.com/ultralytics/yolov5/ 
