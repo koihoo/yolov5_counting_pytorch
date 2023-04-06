@@ -188,7 +188,8 @@ def run(
     if isinstance(names, (list, tuple)):  # old format
         names = dict(enumerate(names))
     class_map = coco80_to_coco91_class() if is_coco else list(range(1000))
-    # 设置tqdm进度条的显示信息
+    ########## 设置tqdm进度条的显示信息
+    # s = ('%22s' + '%11s' * 6) % ('Class', 'Images', 'Instances', 'P', 'R', 'mAP50', 'mAP50-95')
     s = ('%22s' + '%11s' * 7) % ('Class', 'Images', 'Instances', 'P', 'R', 'mAP50', 'mAP50-95', 'F1-score')
     tp, fp, p, r, f1, mp, mr, map50, ap50, map = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
     dt = Profile(), Profile(), Profile()  # profiling times
@@ -273,7 +274,7 @@ def run(
 
     # Compute metrics
     stats = [torch.cat(x, 0).cpu().numpy() for x in zip(*stats)]  # to numpy
-       # 根据上面的统计预测结果计算p, r, ap, f1, ap_class（ap_per_class函数是计算每个类的mAP等指标的）等指标
+    ### 根据上面的统计预测结果计算p, r, ap, f1, ap_class（ap_per_class函数是计算每个类的mAP等指标的）等指标
         # p: [nc] 最大平均f1时每个类别的precision
         # r: [nc] 最大平均f1时每个类别的recall
         # ap: [71, 10] 数据集每个类别在10个iou阈值下的mAP
@@ -282,6 +283,7 @@ def run(
     if len(stats) and stats[0].any():
         tp, fp, p, r, f1, ap, ap_class = ap_per_class(*stats, plot=plots, save_dir=save_dir, names=names)
         ap50, ap = ap[:, 0], ap.mean(1)  # AP@0.5, AP@0.5:0.95
+        # mp, mr, map50, map = p.mean(), r.mean(), ap50.mean(), ap.mean()
         mp, mr, map50, map, f1 = p.mean(), r.mean(), ap50.mean(), ap.mean(), f1.mean()
     nt = np.bincount(stats[3].astype(int), minlength=nc)  # number of targets per class
 
@@ -289,6 +291,7 @@ def run(
     # 6.12、print打印各项指标
     # Print results  数据集图片数量 + 数据集gt框的数量 + 所有类别的平均precision + 
     #                所有类别的平均recall + 所有类别的平均mAP@0.5 + 所有类别的平均mAP@0.5:0.95
+    # pf = '%22s' + '%11i' * 2 + '%11.3g' * 4  # print format
     pf = '%22s' + '%11i' * 2 + '%11.3g' * 5  # print format
     LOGGER.info(pf % ('all', seen, nt.sum(), mp, mr, map50, map, f1))
     if nt.sum() == 0:

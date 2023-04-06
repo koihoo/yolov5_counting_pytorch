@@ -204,7 +204,7 @@ def run(
 
             # Save results (image with detections) 是否需要保存图片或视频（检测后的图片/视频 里面已经被我们画好了框的） img0
             if save_img:
-                ##############counting###################
+                ############## counting ###################
                 cv2.putText(im0,f"{names[int(c)]}{'s' * (n > 1)}: {n}", (5,50), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 2)
                 if dataset.mode == 'image':
                     cv2.imwrite(save_path, im0)
