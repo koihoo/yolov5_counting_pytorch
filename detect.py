@@ -166,12 +166,14 @@ def run(
             if len(det):
                 # Rescale boxes from img_size to im0 size  将预测信息（相对img_size 640）映射回原图 img0 size
                 det[:, :4] = scale_boxes(im.shape[2:], det[:, :4], im0.shape).round()
+                Results = "Results: "
 
                 # Print results
                 # 输出信息s + 检测到的各个类别的目标个数
                 for c in det[:, 5].unique():
                     n = (det[:, 5] == c).sum()  # detections per class
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
+                    Results += '\n'+f"{n} {names[int(c)]}" # TODO 加了一个变量Results
 
                 # Write results
                 # 保存预测信息: txt、img0上画框、crop_img
@@ -185,7 +187,7 @@ def run(
                     
                     # 在原图上画框 + 将预测到的目标剪切出来 保存成图片 保存在save_dir/crops下                    
                     if save_img or save_crop or view_img:  # Add bbox to image
-                        c = int(cls)  # integer class
+                        c = int(cls)  # integer class 分类数
                         label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
                         annotator.box_label(xyxy, label, color=colors(c, True))
                     if save_crop:
@@ -204,8 +206,17 @@ def run(
 
             # Save results (image with detections) 是否需要保存图片或视频（检测后的图片/视频 里面已经被我们画好了框的） img0
             if save_img:
-                ############## counting #######################
-                cv2.putText(im0,f"{names[int(c)]}{'s' * (n > 1)}: {n}", (5,50), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 2)
+############################# 单目标 counting ##########################################
+                # cv2.putText(im0,f"{names[int(c)]}{'s' * (n > 1)}: {n}", (5,50), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 2)
+                # cv2.putText(im0,f"{names[int(c)]}{'s' * (n > 1)}: {n}", (5,50), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 2)
+
+#############################  多目标计数 ##############################################################
+                # 需用循环的方式显示多行,因为cv2.putText对换行转义符'\n'显示为'?'
+                y0, dy = 50, 40
+                for i, txt in enumerate(Results.split('\n')):
+                    y = y0 + i * dy
+                    cv2.putText(im0, txt, (50, y), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2, 2)
+#######################################################################################################
                 if dataset.mode == 'image':
                     cv2.imwrite(save_path, im0)
                 else:  # 'video' or 'stream'
@@ -258,7 +269,7 @@ def parse_opt():
     parser.add_argument('--project', default=ROOT / 'runs/detect', help='save results to project/name')
     parser.add_argument('--name', default='exp', help='save results to project/name')
     parser.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
-    parser.add_argument('--line-thickness', default=1, type=int, help='bounding box thickness (pixels)')
+    parser.add_argument('--line-thickness', default=2, type=int, help='bounding box thickness (pixels)')
     parser.add_argument('--hide-labels', default=False, action='store_true', help='hide labels')
     parser.add_argument('--hide-conf', default=False, action='store_true', help='hide confidences')
     parser.add_argument('--half', action='store_true', help='use FP16 half-precision inference')
