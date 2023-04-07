@@ -166,14 +166,15 @@ def run(
             if len(det):
                 # Rescale boxes from img_size to im0 size  将预测信息（相对img_size 640）映射回原图 img0 size
                 det[:, :4] = scale_boxes(im.shape[2:], det[:, :4], im0.shape).round()
-                Results = "Results: "
+                Results = "Results: " # 多目标计数中
 
                 # Print results
                 # 输出信息s + 检测到的各个类别的目标个数
                 for c in det[:, 5].unique():
                     n = (det[:, 5] == c).sum()  # detections per class
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
-                    Results += '\n'+f"{n} {names[int(c)]}" # TODO 加了一个变量Results
+
+                    Results += '\n'+f"{n} {names[int(c)]}" #  多目标计数中加了一个变量Results
 
                 # Write results
                 # 保存预测信息: txt、img0上画框、crop_img
