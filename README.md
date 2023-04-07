@@ -5,9 +5,9 @@
 * 显示检测的类别
 * to do
 
-###效果展示
+### 效果展示
 
-![Alt text](https://cdn.nlark.com/yuque/0/2023/jpeg/35529404/1680766431805-e45162a1-f84e-46a4-9c9b-5758aa79894d.jpeg?x-oss-process%3Dimage%2Fresize%2Cw_937%2Climit_0%2Finterlace%2C1)
+![节点](https://cdn.nlark.com/yuque/0/2023/png/35529404/1680835735502-8fabe78c-9e87-4ec8-b615-c2927eb4eb56.png?x-oss-process=image%2Fresize%2Cw_632%2Climit_0) 
 
 ### 一、运行环境 
 * ubuntu 18.04
